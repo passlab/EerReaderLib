@@ -17,7 +17,8 @@ How To Build the example TestEerReader
 
 4. To run the TestEerReader.exe use the --help or -h argument on command line to understand what arguments the test needs. 
 
-### Build on Ubuntu Linux
+Build on Ubuntu Linux
+=======================================
 1. Build and install libtiff library https://gitlab.com/libtiff/libtiff
 
         git clone https://gitlab.com/libtiff/libtiff.git
