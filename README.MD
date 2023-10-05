@@ -29,8 +29,8 @@ Build on Ubuntu Linux
 2. Checkout this repo from passlab and build
 
         git clone https://github.com/passlab/EerReaderLib
-	cd EerReaderLib
-	mkdir build; cd build
+        cd EerReaderLib
+        mkdir build; cd build
         cmake  -DLIBTIFF_INCLUDE_DIR=<libtiff-install>/include -DLIBTIFF_LIB_DIR=<libtiff-install>/lib ..
         make
 
