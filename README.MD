@@ -26,10 +26,13 @@ Build on Ubuntu Linux
         cmake -DCMAKE_INSTALL_PREFIX=<libtiff-install> .
         make; make install
 
-2. Checkout this repo from passlab
+2. Checkout this repo from passlab and build
+
         git clone https://github.com/passlab/EerReaderLib
 	cd EerReaderLib
 	mkdir build; cd build
         cmake  -DLIBTIFF_INCLUDE_DIR=<libtiff-install>/include -DLIBTIFF_LIB_DIR=<libtiff-install>/lib ..
         make
+
+3. Execute 
         ./TestEerReader --help
