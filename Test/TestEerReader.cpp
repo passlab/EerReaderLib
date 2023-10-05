@@ -4,6 +4,7 @@
 #include <thread>
 #include <fstream>
 #include <tiffio.h>
+#include <string.h>
 
 #include "../ElectronCountedFramesDecompressor.h"
 
@@ -13,15 +14,15 @@ void SetTag(std::shared_ptr<TIFF> tiffFile, uint32_t tag, T value)
     TIFFSetField(tiffFile.get(), tag, value);
 }
 
-std::shared_ptr<TIFF> OpenFile(const std::wstring &filepath) {
-    auto tiffFile = TIFFOpenW(filepath.c_str(), "w");
+std::shared_ptr<TIFF> OpenFile(const std::string &filepath) {
+    auto tiffFile = TIFFOpen(filepath.c_str(), "w");
     if (tiffFile == nullptr) {
         throw std::runtime_error("Could not write file");
     }
     return std::shared_ptr<TIFF>(tiffFile, [](TIFF *f) { TIFFClose(f); });
 }
 
-void SaveTiff(const std::wstring &filepath, uint32_t width, uint32_t height,
+void SaveTiff(const std::string &filepath, uint32_t width, uint32_t height,
     std::vector<uint8_t> decompressedImage) {
     auto tiffFile = OpenFile(filepath);
 
@@ -49,18 +50,18 @@ void SaveTiff(const std::wstring &filepath, uint32_t width, uint32_t height,
 
 int main(int argc, char* argv[]) {
     std::string inputFile;
-    std::wstring outputFile;
+    std::string outputFile;
     int upscaleFactor;
 
     if (argc == 4) {
         inputFile = argv[1];
-        outputFile = std::wstring(argv[2], argv[2] + strlen(argv[2]));
+        outputFile = std::string(argv[2], argv[2] + strlen(argv[2]));
         upscaleFactor = std::stoi(argv[3]);
     }
     else if (argc == 3)
     {
         inputFile = argv[1];
-        outputFile = std::wstring(argv[2], argv[2] + strlen(argv[2]));
+        outputFile = std::string(argv[2], argv[2] + strlen(argv[2]));
         upscaleFactor = 1;
     }
     else if (argc == 2 && (strcmp(argv[1], "--help") == 0 ||
@@ -99,7 +100,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Number of electron hits: "
         << decompressor.getNElectronsCounted() << std::endl;
     std::cout << "Saving output as Tiff image ..." << std::endl;
-    SaveTiff(outputFile + L".Tiff", width, height, eerImage);
+    SaveTiff(outputFile + ".Tiff", width, height, eerImage);
 
     return EXIT_SUCCESS;
 }

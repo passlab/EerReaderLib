@@ -16,3 +16,20 @@ How To Build the example TestEerReader
 3. Open the solution in Visual Studio and build the solution. This will create a .lib for the source code (in Build/lib/Debug) and an .exe for the test example (in Build/Debug).
 
 4. To run the TestEerReader.exe use the --help or -h argument on command line to understand what arguments the test needs. 
+
+Build on Ubuntu Linux
+1. Build and install libtiff library https://gitlab.com/libtiff/libtiff
+
+        git clone https://gitlab.com/libtiff/libtiff.git
+        cd libtiff; git checkout -b v4.6.0
+        mkdir <libtiff-install> #create or designate a folder for libtiff installation
+        cmake -DCMAKE_INSTALL_PREFIX=<libtiff-install> .
+        make; make install
+
+2. Checkout this repo from passlab
+        git clone https://github.com/passlab/EerReaderLib
+	cd EerReaderLib
+	mkdir build; cd build
+        cmake  -DLIBTIFF_INCLUDE_DIR=<libtiff-install>/include -DLIBTIFF_LIB_DIR=<libtiff-install>/lib ..
+        make
+        ./TestEerReader --help
