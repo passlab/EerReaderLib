@@ -5,6 +5,8 @@
 #include <fstream>
 #include <tiffio.h>
 #include <string.h>
+#include <omp.h>
+#include <sys/timeb.h>
 
 #include "../ElectronCountedFramesDecompressor.h"
 
@@ -48,11 +50,13 @@ void SaveTiff(const std::string &filepath, uint32_t width, uint32_t height,
 }
 
 
+double read_timer_ms();
+
 int main(int argc, char* argv[]) {
     std::string inputFile;
     std::string outputFile;
     int upscaleFactor;
-
+    double elapsed = read_timer_ms();
     if (argc == 4) {
         inputFile = argv[1];
         outputFile = std::string(argv[2], argv[2] + strlen(argv[2]));
@@ -94,6 +98,7 @@ int main(int argc, char* argv[]) {
     // First frame
     decompressor.decompressImage(eerImage.data(), upscaleFactor);
     // Rest of the frames
+    #pragma omp parallel for
     for (unsigned int eerFrame = 1; eerFrame < nrOfFrames; eerFrame++) {
         decompressor.decompressImage_AddTo(eerImage.data(), upscaleFactor);
     }
@@ -101,6 +106,16 @@ int main(int argc, char* argv[]) {
         << decompressor.getNElectronsCounted() << std::endl;
     std::cout << "Saving output as Tiff image ..." << std::endl;
     SaveTiff(outputFile + ".Tiff", width, height, eerImage);
+    
+    elapsed = read_timer_ms() - elapsed;
+    printf("Total Execution time :%0.2fms\n", elapsed);
 
     return EXIT_SUCCESS;
 }
+
+double read_timer_ms() {
+    struct timeb tm;
+    ftime(&tm);
+    return (double) tm.time * 1000.0 + (double) tm.millitm;
+}
+
